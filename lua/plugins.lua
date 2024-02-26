@@ -18,17 +18,19 @@ return require('packer').startup(function(use)
     'coc-json',
     'coc-prettier'
   }
+
   -- Auto close brackets, parentheses, and braces
   use 'jiangmiao/auto-pairs'
+
   -- Highlighting and indenting for JSX and TSX files
   use 'yuezk/vim-js'
   use 'HerringtonDarkholme/yats.vim'
   use 'maxmellon/vim-jsx-pretty'
+
   -- Simple plugins can be specified as strings
-  use 'AndrewRadev/undoquit.vim'
   use 'rstacruz/vim-closer'
-  -- use 'github/copilot.vim'
   -- use 'rafi/awesome-vim-colorschemes'
+
   -- Instant commenting
   use {
     'numToStr/Comment.nvim',
@@ -38,6 +40,7 @@ return require('packer').startup(function(use)
       })
     end
   }
+
   use {
     "nvim-neo-tree/neo-tree.nvim",
       branch = "v3.x",
@@ -337,6 +340,7 @@ return require('packer').startup(function(use)
       vim.api.nvim_set_keymap("v", "S", "<cmd>HopChar2BC<CR>", {noremap=false})
     end
   }
+
   -- Lazy loading:
   -- Load on specific commands
   use {'tpope/vim-dispatch', opt = true, cmd = {'Dispatch', 'Make', 'Focus', 'Start'}}
@@ -360,27 +364,22 @@ return require('packer').startup(function(use)
     requires = {{'hrsh7th/vim-vsnip', opt = true}, {'hrsh7th/vim-vsnip-integ', opt = true}}
   }
 
-  -- You can specify rocks in isolation
-  -- use_rocks 'penlight'
-  -- use_rocks {'lua-resty-http', 'lpeg'}
 
-  -- Local plugins can be included
---   use '~/projects/personal/hover.nvim'
+  use({
+     "kylechui/nvim-surround",
+         tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+             config = function()
+             require("nvim-surround").setup({
+             -- Configuration here, or leave empty to use defaults
+         })
+     end
+    })
 
   -- Plugins can have post-install/update hooks
   use {'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview'}
 
   -- Post-install/update hook with neovim command
-  -- use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-
-  -- Post-install/update hook with call of vimscript function with argument
-  -- use { 'glacambre/firenvim', run = function() vim.fn['firenvim#install'](0) end }
-
-  -- Use specific branch, dependency and run lua file after load
-  use {
-    'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
-    requires = {'kyazdani42/nvim-web-devicons'}
-  }
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
   -- Use dependency and run lua function after load
   use {
@@ -388,17 +387,54 @@ return require('packer').startup(function(use)
     config = function() require('gitsigns').setup() end
   }
 
-  -- You can specify multiple plugins in a single call
-  use {'tjdevries/colorbuddy.vim', {'nvim-treesitter/nvim-treesitter', opt = true}}
+  use {'tjdevries/colorbuddy.vim'}
 
-  -- You can alias plugin names
-  use ({ 'projekt0n/github-nvim-theme' })
+  -- Colorschemes
   use {'dracula/vim', as = 'dracula'}
   use {'folke/tokyonight.nvim'}
   use {'skullamortis/forest.nvim'}
-  use {'thenewvu/vim-colors-blueprint'}
+  use {'junegunn/seoul256.vim'}
+  use {'owickstrom/vim-colors-paramount'}
+  use {'liuchengxu/space-vim-theme'}
+  use {'sainnhe/edge'}
+  use {'rose-pine/neovim'}
+  use {'catppuccin/nvim'}
 
-  use {'github/copilot.vim'}
+
+ --  use({
+ --    "jackMort/ChatGPT.nvim",
+ --      config = function()
+	-- require("chatgpt").setup()
+ --      end,
+ --      requires = {
+	-- "MunifTanjim/nui.nvim",
+	-- "nvim-lua/plenary.nvim",
+	-- "nvim-telescope/telescope.nvim"
+ --      }
+ --  })
+ --  use ({
+ --      "Bryley/neoai.nvim",
+ --      require = { "MunifTanjim/nui.nvim" },
+ --      cmd = {
+	--   "NeoAI",
+	--   "NeoAIOpen",
+	--   "NeoAIClose",
+	--   "NeoAIToggle",
+	--   "NeoAIContext",
+	--   "NeoAIContextOpen",
+	--   "NeoAIContextClose",
+	--   "NeoAIInject",
+	--   "NeoAIInjectCode",
+	--   "NeoAIInjectContext",
+	--   "NeoAIInjectContextCode",
+ --      },
+ --      config = function()
+	--   require("neoai").setup({
+	--       -- Options go here
+	--   })
+ --      end,
+ --  })
+  -- use {'github/copilot.vim'}
  --  use {'huggingface/llm.nvim',
  --    config = function()
  --      require('llm').setup({
@@ -426,19 +462,4 @@ return require('packer').startup(function(use)
  --    end
  --  }
 
-  use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.3',
-  -- or                            , branch = '0.1.x',
-    -- requires = { {'nvim-lua/plenary.nvim'} }
-  }
-
-  use({
-     "kylechui/nvim-surround",
-         tag = "*", -- Use for stability; omit to use `main` branch for the latest features
-             config = function()
-             require("nvim-surround").setup({
-             -- Configuration here, or leave empty to use defaults
-         })
-     end
-    })
 end)

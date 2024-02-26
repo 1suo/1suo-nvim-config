@@ -54,7 +54,9 @@ nnoremap <Leader>r :execute 'cd ' . expand('%:p:h')<CR>
 nnoremap <Leader>fp :let @+ = expand('%:p:h')<CR>
 nnoremap <Leader>:e :execute 'cd ' . 'E:\'<CR>
 nnoremap <Leader>:c :execute 'cd ' . 'C:\'<CR>
+nnoremap <Leader>cl oconsole.log("",);<Esc>F"i
 
+nnoremap <Leader>nc :Neotree current<CR>
 nnoremap <Leader>nf :Neotree float toggle<CR>
 nnoremap <Leader>nb :Neotree float buffers<CR>
 nnoremap <Leader>nr :Neotree reveal<CR>
@@ -109,6 +111,8 @@ nnoremap <Leader>pu :PackerUpdate<CR>
 nnoremap <Leader>pl :PackerLoad<CR>
 nnoremap <Leader>pt :PackerStatus<CR>
 
+nnoremap <Leader>fd :CocCommand prettier.forceFormatDocument<CR>
+
 colorscheme paramount
 
 :set list
@@ -116,11 +120,10 @@ colorscheme paramount
 " :set listchars=eol:␍,trail:~,tab:>-,nbsp:.,space:.
 :set ignorecase 
 :set number
-" :set foldmethod=indent
 :set shiftwidth=2
 :set foldmethod=indent
 " :set foldexpr=nvim_treesitter#foldexpr()
-:set nofoldenable                     " Disable folding at startup.
+" :set nofoldenable                     " Disable folding at startup.
 :set encoding=utf-8
 :set guifont=JetBrainsMono\ NFM:h10
 :set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
