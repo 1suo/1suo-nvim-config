@@ -1,4 +1,8 @@
 lua require('plugins')
+:set termguicolors
+:set cursorline
+" :set cursorcolumn
+" lua require( 'colorizer' ).setup()
 
 function! OpenBufferInFloatWindow()
     " Save the current 'updatetime' option
@@ -18,7 +22,7 @@ function! OpenBufferInFloatWindow()
     " Calculate the floating window position
     let float_width = float2nr(s:screen_width * 0.7)
     let float_height = float2nr(s:screen_height * 0.9)
-    let float_row = (s:screen_height - float_height) / 2
+    let float_row = (s:screen_height - float_height) / 2 - 1
     let float_col = (s:screen_width - float_width) / 2
 
     try
@@ -28,11 +32,6 @@ function! OpenBufferInFloatWindow()
         " Open the floating window and set its buffer to the current buffer
         let float_win = nvim_open_win(current_buf, 1, float_opts)
 
-        " Set the floating window as the current window
-        exec 'wincmd w' float_win
-
-        " Return focus to the original window
-        exec 'wincmd w' current_win
     finally
         " Restore the original 'updatetime' value
         execute 'set updatetime=' . saved_updatetime
@@ -55,11 +54,8 @@ nnoremap <Leader>fp :let @+ = expand('%:p:h')<CR>
 nnoremap <Leader>:e :execute 'cd ' . 'E:\'<CR>
 nnoremap <Leader>:c :execute 'cd ' . 'C:\'<CR>
 nnoremap <Leader>cl oconsole.log("",);<Esc>F"i
+nnoremap <Leader>e :Explore<CR>
 
-nnoremap <Leader>nc :Neotree current<CR>
-nnoremap <Leader>nf :Neotree float toggle<CR>
-nnoremap <Leader>nb :Neotree float buffers<CR>
-nnoremap <Leader>nr :Neotree reveal<CR>
 nnoremap <Leader>so :source%<CR>
 nnoremap <Leader>/ :let @/ = ""<CR>
 nnoremap <Leader>ss :Neotree close<CR>:mksession! C:\Users\isuo1\AppData\Local\nvim-data\sessions\
@@ -100,6 +96,11 @@ nnoremap <Leader>ff :Telescope find_files<CR>
 nnoremap <Leader>fg :Telescope live_grep<CR>
 nnoremap <Leader>fb :Telescope buffers<CR>
 
+nnoremap <Leader>lg :LazyGit<CR>
+nnoremap <Leader>lf :LazyGitFilter<CR>
+nnoremap <Leader>gs :!git flow feature start
+nnoremap <Leader>gf :!git flow feature finish
+
 nnoremap <Leader>y :"+y
 nnoremap <Leader>pp :"+p
 nnoremap <Leader>pP :"+P
@@ -113,11 +114,11 @@ nnoremap <Leader>pt :PackerStatus<CR>
 
 nnoremap <Leader>fd :CocCommand prettier.forceFormatDocument<CR>
 
-colorscheme paramount
+" colorscheme ron
 
 :set list
-" :set listchars=eol:↵,trail:~,tab:>-,nbsp:.,space:.
-" :set listchars=eol:␍,trail:~,tab:>-,nbsp:.,space:.
+" :set listchars=eol:↵,trail:\|,tab:>-,nbsp:.,space: 
+" :set listchars=eol:␍,trail:~,tab:>-,nbsp:.,space:|
 :set ignorecase 
 :set number
 :set shiftwidth=2
@@ -127,4 +128,6 @@ colorscheme paramount
 :set encoding=utf-8
 :set guifont=JetBrainsMono\ NFM:h10
 :set langmap=ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz
+:set updatetime=300
 
+autocmd! FileType TelescopeResults setlocal nofoldenable
