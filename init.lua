@@ -1,5 +1,10 @@
 -- init.lua
 
+-- Disable unused providers
+vim.g.loaded_node_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+
 -- [[ OPTIONS ]]
 -- See :help option-list
 vim.g.mapleader = ' '
@@ -82,18 +87,35 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup('plugins')
+require('lazy').setup('plugins', {
+  rocks = {
+    enabled = false,
+  },
+})
 
 -- [[ COLORSCHEME ]]
-vim.cmd('colorscheme paramount')
-
--- [[ TELESCOPE ]]
-require("telescope").setup { defaults = { file_ignore_patterns = { "node_modules" } } }
-
--- [[ TREESITTER ]]
-vim.cmd('set foldexpr=nvim_treesitter#foldexpr()')
+vim.cmd.colorscheme 'dracula'
 
 -- [[ KEYMAPPINGS from init.vim & init-inprogress.lua ]]
+
+vim.keymap.set('n', 'D', '"mddp')
+vim.keymap.set('n', 'U', '"mddkP')
+vim.keymap.set('n', 'J', '10j')
+vim.keymap.set('n', 'K', '10k')
+vim.keymap.set('n', 'H', '10h')
+vim.keymap.set('n', 'L', '10l')
+
+vim.keymap.set('v', 'J', '10j')
+vim.keymap.set('v', 'K', '10k')
+vim.keymap.set('v', 'H', '10h')	
+vim.keymap.set('v', 'L', '10l')
+
+vim.keymap.set('n', ';', ':')
+vim.keymap.set('n', ':', ';')
+vim.keymap.set('v', ';', ':')
+vim.keymap.set('v', ':', ';')
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+
 vim.api.nvim_set_keymap('n', '<Leader>q', [[:q<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>w', [[:w<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>W', [[:wq<CR>]], { noremap = true, silent = true })
@@ -116,26 +138,18 @@ vim.api.nvim_set_keymap('n', '<Leader>ff', [[:Telescope find_files<CR>]], { nore
 vim.api.nvim_set_keymap('n', '<Leader>fg', [[:Telescope live_grep<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>fb', [[:Telescope buffers<CR>]], { noremap = true, silent = true })
 
+vim.api.nvim_set_keymap('n', '<Leader>oh', [[:Telescope orgmode search_headings<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>or', [[:Telescope orgmode refile_heading<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>ol', [[:Telescope orgmode insert_link<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>ot', [[:Telescope orgmode search_tags<CR>]], { noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>sa', '<cmd>OrgSuperAgenda<cr>')
+vim.keymap.set('n', '<leader>sA', '<cmd>OrgSuperAgenda!<cr>')
+
 vim.api.nvim_set_keymap('n', '<Leader>t', [[:terminal<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>r', [[:execute 'cd ' . expand('%:p:h')<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>fp', [[:let @+ = expand('%:p:h')<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>e', [[:Explore<CR>]], { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap('n', '<Leader>so', [[:source%<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>/', [[:let @/ = ""<CR>]], { noremap = true, silent = true })
-
-vim.keymap.set('n', 'D', '"mddp')
-vim.keymap.set('n', 'U', '"mddkP')
-vim.keymap.set('n', 'J', '10j')
-vim.keymap.set('n', 'K', '10k')
-vim.keymap.set('n', 'H', '10h')
-vim.keymap.set('n', 'L', '10l')
-
-vim.keymap.set('n', ';', ':')
-vim.keymap.set('n', ':', ';')
-vim.keymap.set('v', ';', ':')
-vim.keymap.set('v', ':', ';')
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
 vim.api.nvim_set_keymap('n', '<Leader>vs', [[:vsplit<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>hs', [[:split<CR>]], { noremap = true, silent = true })
@@ -145,44 +159,16 @@ vim.api.nvim_set_keymap('n', '<Leader>zn', [[:set nowrap<CR>]], { noremap = true
 vim.api.nvim_set_keymap('n', '<Leader>lg', [[:LazyGit<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>lf', [[:LazyGitFilter<CR>]], { noremap = true, silent = true })
 
+vim.api.nvim_set_keymap('n', '<Leader>la', [[:Lazy<CR>]], { noremap = true, silent = true })
+
+-- nnn file manager
+vim.api.nvim_set_keymap('n', '<Leader>np', [[:NnnPicker<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>nt', [[:NnnExplorer<CR>]], { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<Leader>fd', [[:call CocAction('runCommand', 'prettier.forceFormatDocument')<CR>]], { noremap = true, silent = true })
+
 vim.api.nvim_set_keymap('n', '<Leader>y', ':"+y', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pp', ':"+p', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pP', ':"+P', { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>ps', [[:PackerSync<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pc', [[:PackerClean<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pi', [[:PackerInstall<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pu', [[:PackerUpdate<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pl', [[:PackerLoad<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>pt', [[:PackerStatus<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>fd', [[:CocCommand prettier.forceFormatDocument<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>ct', [[:checktime<CR>]], { noremap = true, silent = true })
-
--- [[ FUNCTIONS ]]
-function OpenBufferInFloatWindow()
-    local current_buf = vim.fn.bufnr("")
-    local screen_width = vim.fn.winwidth(0)
-    local screen_height = vim.fn.winheight(0)
-
-    local float_width = math.floor(screen_width * 0.7)
-    local float_height = math.floor(screen_height * 0.9)
-    local float_row = math.floor((screen_height - float_height) / 2)
-    local float_col = math.floor((screen_width - float_width) / 2)
-
-    local float_opts = {
-        relative = 'editor',
-        width = float_width,
-        height = float_height,
-        row = float_row,
-        col = float_col,
-        border = 'single'
-    }
-
-    vim.fn.nvim_open_win(current_buf, 1, float_opts)
-end
-
-vim.api.nvim_set_keymap('n', '<leader>of', [[:lua OpenBufferInFloatWindow()<CR>]], { noremap = true, silent = true })
 
 -- Autocmds
 vim.api.nvim_create_autocmd("FileType", {
