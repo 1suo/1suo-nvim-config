@@ -39,7 +39,7 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeoutlen = 300
+-- vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -94,7 +94,7 @@ require('lazy').setup('plugins', {
 })
 
 -- [[ COLORSCHEME ]]
-vim.cmd.colorscheme 'dracula'
+vim.cmd.colorscheme 'tokyonight'
 
 -- [[ KEYMAPPINGS from init.vim & init-inprogress.lua ]]
 
@@ -116,8 +116,8 @@ vim.keymap.set('v', ';', ':')
 vim.keymap.set('v', ':', ';')
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
-vim.api.nvim_set_keymap('n', '<Leader>q', [[:q<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>w', [[:w<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>q', [[:q!<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>w', [[:w!<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>W', [[:wq<CR>]], { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap('n', '<Leader>1', [[:wincmd 1w<CR>]], { noremap = true, silent = true })
@@ -137,14 +137,6 @@ vim.api.nvim_set_keymap('n', '<Leader>co', [[:Telescope colorscheme<CR>]], { nor
 vim.api.nvim_set_keymap('n', '<Leader>ff', [[:Telescope find_files<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>fg', [[:Telescope live_grep<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>fb', [[:Telescope buffers<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>oh', [[:Telescope orgmode search_headings<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>or', [[:Telescope orgmode refile_heading<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>ol', [[:Telescope orgmode insert_link<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>ot', [[:Telescope orgmode search_tags<CR>]], { noremap = true, silent = true })
-
-vim.keymap.set('n', '<leader>sa', '<cmd>OrgSuperAgenda<cr>')
-vim.keymap.set('n', '<leader>sA', '<cmd>OrgSuperAgenda!<cr>')
 
 vim.api.nvim_set_keymap('n', '<Leader>t', [[:terminal<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>e', [[:Explore<CR>]], { noremap = true, silent = true })
