@@ -11,31 +11,41 @@ return {
 	    org_capture = '<leader>oc',
 	  },
     	  org = {
-	    org_todo = '<leader>on',
+	    org_todo = '<leader>oo',
 	    org_set_tags_command = '<leader>ot',
-	    org_agenda_add_note = '<leader>oi',
+	    org_add_note = '<leader>on',
 	    org_refile = '<leader>or',
 	    org_priority = '<leader>op',
 	    org_toggle_heading = '<leader>oh',
 	    org_toggle_checkbox = '<leader>ox',
 	    org_deadline = '<leader>od',
 	    org_schedule = '<leader>os',
-	    org_time_stamp = '<leader>ow',
-	    org_time_stamp_inactive = '<leader>oW',
+	    org_time_stamp = '<leader>oW',
+	    org_time_stamp_inactive = '<leader>ow',
 	    org_insert_link = '<leader>ol',
+	    org_open_at_point = '<leader>og',
 	    org_archive_subtree = '<leader>oz',
 	  },
 	  agenda = {
-	    org_agenda_todo = '<leader>on',
+	    org_agenda_todo = '<leader>oo',
 	    org_agenda_set_tags_command = '<leader>ot',
-	    org_agenda_add_note = '<leader>oi',
+	    org_agenda_add_note = '<leader>on',
 	    org_agenda_refile = '<leader>or',
 	    org_agenda_priority = '<leader>op',
 	    org_agenda_schedule = '<leader>os',
 	    org_agenda_deadline = '<leader>od',
 	    org_agenda_archive = '<leader>oz',
+	    org_agenda_open_at_point = '<leader>og',
 	    org_agenda_later = 'L',
 	    org_agenda_earlier = 'H',
+	  },
+	  capture = {
+	    org_capture_finalize = '<leader>ok',
+	    org_capture_kill = '<leader>oq',
+	  },
+	  note = {
+	    org_note_finalize = '<leader>ok',
+	    org_note_kill = '<leader>oq',
 	  },
 	},
 
@@ -52,7 +62,7 @@ return {
 	win_split_mode = 'auto',
 	org_agenda_files = {'~/memo/orgfiles/**/*'},
 	org_default_notes_file = '~/memo/orgfiles/refile.org',
-	org_todo_keywords = {'TODO(t)', 'PROGRESS(p)', 'WAITING(w)', '|', 'DONE(d)', 'CANCELLED(c)'},
+	org_todo_keywords = {'INBOX(i)', 'TODO(t)', 'PROGRESS(p)', 'WAITING(w)', '|', 'DONE(d)', 'CANCELLED(c)', '(x)'},
 
 	org_capture_templates = {
     	  t = {
@@ -78,7 +88,7 @@ return {
 	    types = {
 	      {
 		type = 'tags',
-		match = 'TODO="TODO"|TODO="PROGRESS"|TODO="WAITING"|TODO="DONE"|TODO="CANCELLED"',
+		match = 'TODO="INBOX"|TODO="TODO"|TODO="PROGRESS"|TODO="WAITING"|TODO="DONE"|TODO="CANCELLED"',
 		org_agenda_overriding_header = 'TODO',
 	      },
 	      {
@@ -109,7 +119,7 @@ return {
 	      }
 	    }
 	  },
-	  -- all files names
+	  -- all headings view that aren't of todo type
 	  f = {
 	    description = 'All files',
 	    types = {
@@ -117,7 +127,7 @@ return {
 		type = 'tags',
 		org_agenda_overriding_header = 'All files',
 		org_agenda_files = {'~/memo/orgfiles/**/*'},
-		org_agenda_view_columns = {'file', 'todo', 'tags', 'priority', 'title'},
+		match = '-TODO="INBOX"-TODO="TODO"-TODO="PROGRESS"-TODO="WAITING"-TODO="DONE"-TODO="CANCELLED"',
 	      }
 	    }
 	  }
@@ -181,9 +191,9 @@ return {
         mapping = cmp.mapping.preset.insert({
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-e>'] = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+          ['<C-p>'] = cmp.mapping.complete(),
+          ['<C-q>'] = cmp.mapping.abort(),
+          ['<C-y>'] = cmp.mapping.confirm({ select = true }),
         }),
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
@@ -195,8 +205,12 @@ return {
     end,
   },
 
-  -- Auto close brackets, parentheses, and braces
-  'jiangmiao/auto-pairs',
+  {
+    'jiangmiao/auto-pairs',
+    config = function()
+      vim.g.AutoPairsMultilineClose = 0
+    end,
+  },
 
   -- Highlighting and indenting for JSX and TSX files
   'yuezk/vim-js',

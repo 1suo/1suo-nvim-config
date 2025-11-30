@@ -94,7 +94,7 @@ require('lazy').setup('plugins', {
 })
 
 -- [[ COLORSCHEME ]]
-vim.cmd.colorscheme 'tokyonight'
+vim.cmd.colorscheme 'default'
 
 -- [[ KEYMAPPINGS from init.vim & init-inprogress.lua ]]
 
