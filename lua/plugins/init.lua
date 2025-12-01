@@ -4,13 +4,14 @@ return {
     'nvim-orgmode/orgmode',
     event = 'VeryLazy',
     config = function()
+      local orgfiles_path = os.getenv('ORGFILES') or '~/memo/orgfiles';
       require('orgmode').setup({
 	win_split_mode = 'auto',
 	notifications = {
 	  enabled = true,
 	},
-	org_agenda_files = {os.getenv('ORGFILES') .. '/**/*'},
-	org_default_notes_file = os.getenv('ORGFILES') .. '/refile.org',
+	org_agenda_files = {orgfiles_path .. '/**/*'},
+	org_default_notes_file = orgfiles_path .. '/refile.org',
 	org_deadline_warning_days = 7,
 
 	org_todo_keywords = {'INBOX(i)', 'TODO(t)', 'PROGRESS(p)', 'WAITING(w)', '|', 'DONE(d)', 'CANCELLED(c)', '( )'},
@@ -110,17 +111,17 @@ return {
     	  t = {
 	    description = 'Task',
 	    template = '* INBOX %?\n  %a\n  %U\n  ',
-	    target = os.getenv('ORGFILES') .. '/tasks.org',
+	    target = orgfiles_path .. '/tasks.org',
 	  },
 	  j = {
 	    description = 'Journal',
 	    template = '* %U %?\n',
-	    target = os.getenv('ORGFILES') .. '/journal/%<%Y-%m>.org'
+	    target = orgfiles_path .. '/journal/%<%Y-%m>.org'
 	  },
 	  r = {
 	    description = 'Refile',
 	    template = '* %?\n  %a\n  %U\n  ',
-	    target = os.getenv('ORGFILES') .. '/refile.org',
+	    target = orgfiles_path .. '/refile.org',
 	  }
 	},
 
@@ -142,12 +143,12 @@ return {
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'Journal',
-		org_agenda_files = {os.getenv('ORGFILES') .. '/journal/' .. os.date('%Y-%m') .. '.org'},
+		org_agenda_files = {orgfiles_path .. '/journal/' .. os.date('%Y-%m') .. '.org'},
 	      },
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'Refile',
-		org_agenda_files = {os.getenv('ORGFILES') .. '/refile.org'},
+		org_agenda_files = {orgfiles_path .. '/refile.org'},
 	      }
 	    }
 	  },
@@ -157,7 +158,7 @@ return {
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'Journal',
-		org_agenda_files = {os.getenv('ORGFILES') .. '/journal/*.org'},
+		org_agenda_files = {orgfiles_path .. '/journal/*.org'},
 	      }
 	    }
 	  },
@@ -167,7 +168,7 @@ return {
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'All files',
-		org_agenda_files = {os.getenv('ORGFILES') .. '/**/*'},
+		org_agenda_files = {orgfiles_path .. '/**/*'},
 		match = '-TODO="INBOX"-TODO="TODO"-TODO="PROGRESS"-TODO="WAITING"-TODO="DONE"-TODO="CANCELLED"',
 	      }
 	    }
