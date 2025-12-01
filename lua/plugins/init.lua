@@ -9,8 +9,8 @@ return {
 	notifications = {
 	  enabled = true,
 	},
-	org_agenda_files = {'~/memo/orgfiles/**/*'},
-	org_default_notes_file = '~/memo/orgfiles/refile.org',
+	org_agenda_files = {os.getenv('ORGFILES') .. '/**/*'},
+	org_default_notes_file = os.getenv('ORGFILES') .. '/refile.org',
 	org_deadline_warning_days = 7,
 
 	org_todo_keywords = {'INBOX(i)', 'TODO(t)', 'PROGRESS(p)', 'WAITING(w)', '|', 'DONE(d)', 'CANCELLED(c)', '( )'},
@@ -110,17 +110,17 @@ return {
     	  t = {
 	    description = 'Task',
 	    template = '* INBOX %?\n  %a\n  %U\n  ',
-	    target = '~/memo/orgfiles/tasks.org',
+	    target = os.getenv('ORGFILES') .. '/tasks.org',
 	  },
 	  j = {
 	    description = 'Journal',
 	    template = '* %U %?\n',
-	    target = '~/memo/orgfiles/journal/%<%Y-%m>.org'
+	    target = os.getenv('ORGFILES') .. '/journal/%<%Y-%m>.org'
 	  },
 	  r = {
 	    description = 'Refile',
 	    template = '* %?\n  %a\n  %U\n  ',
-	    target = '~/memo/orgfiles/refile.org',
+	    target = os.getenv('ORGFILES') .. '/refile.org',
 	  }
 	},
 
@@ -142,12 +142,12 @@ return {
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'Journal',
-		org_agenda_files = {'~/memo/orgfiles/journal/' .. os.date('%Y-%m') .. '.org'},
+		org_agenda_files = {os.getenv('ORGFILES') .. '/journal/' .. os.date('%Y-%m') .. '.org'},
 	      },
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'Refile',
-		org_agenda_files = {'~/memo/orgfiles/refile.org'},
+		org_agenda_files = {os.getenv('ORGFILES') .. '/refile.org'},
 	      }
 	    }
 	  },
@@ -157,7 +157,7 @@ return {
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'Journal',
-		org_agenda_files = {'~/memo/orgfiles/journal/*.org'},
+		org_agenda_files = {os.getenv('ORGFILES') .. '/journal/*.org'},
 	      }
 	    }
 	  },
@@ -167,7 +167,7 @@ return {
 	      {
 		type = 'tags',
 		org_agenda_overriding_header = 'All files',
-		org_agenda_files = {'~/memo/orgfiles/**/*'},
+		org_agenda_files = {os.getenv('ORGFILES') .. '/**/*'},
 		match = '-TODO="INBOX"-TODO="TODO"-TODO="PROGRESS"-TODO="WAITING"-TODO="DONE"-TODO="CANCELLED"',
 	      }
 	    }
