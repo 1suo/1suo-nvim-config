@@ -39,7 +39,7 @@ vim.wo.signcolumn = 'yes'
 
 -- Decrease update time
 vim.o.updatetime = 250
--- vim.o.timeoutlen = 300
+vim.o.timeoutlen = 500
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -73,6 +73,7 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- [[ PLUGINS ]]
+-- only plugin manager is configured here
 -- See `:help lazy.nvim`
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -97,9 +98,74 @@ require('lazy').setup('plugins', {
 vim.cmd.colorscheme 'default'
 
 -- [[ KEYMAPPINGS from init.vim & init-inprogress.lua ]]
+-- In <Leader> sequences, system commands are mapped to non-apha symbols to give plugins semantic space in alphabet
 
-vim.keymap.set('n', 'D', '"mddp')
-vim.keymap.set('n', 'U', '"mddkP')
+-- Frequent commands occupy whole letter domains
+vim.api.nvim_set_keymap('n', '<Leader>q', [[:q!<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>w', [[:w!<CR>]], { noremap = true, silent = true })
+
+-- Lazy.nvim shortcut (only plugin to include here)
+vim.api.nvim_set_keymap('n', '<Leader>:', [[:Lazy<CR>]], { noremap = true, silent = true })
+
+-- Split window shortcuts
+vim.api.nvim_set_keymap('n', '<Leader>|', [[:vsplit<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>-', [[:split<CR>]], { noremap = true, silent = true })
+
+-- Toggle background between dark and light
+vim.api.nvim_set_keymap('n', '<Leader>_', [[:set background=dark<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>+', [[:set background=light<CR>]], { noremap = true, silent = true })
+
+-- Check if file changed outside of Neovim
+vim.api.nvim_set_keymap('n', '<Leader>=', [[:checktime<CR>]], { noremap = true, silent = true })
+
+-- Clear search highlight
+vim.api.nvim_set_keymap('n', '<Leader>/', [[:noh<CR>]], { noremap = true, silent = true })
+
+-- Terminal, marks, jumps, registers
+vim.api.nvim_set_keymap('n', '<Leader>~', [[:terminal<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>\'', [[:marks<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>`', [[:jumps<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>"', [[:registers<CR>]], { noremap = true, silent = true })
+
+-- Resize splits
+vim.api.nvim_set_keymap('n', '<C-Up>',    [[:resize +2<CR>]],    { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-Down>',  [[:resize -2<CR>]],		{ noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-Left>',  [[:vertical resize -2<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-Right>', [[:vertical resize +2<CR>]], { noremap = true, silent = true })
+
+-- Navigation between splits
+vim.api.nvim_set_keymap('n', '<C-h>', [[:wincmd h<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-j>', [[:wincmd j<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-k>', [[:wincmd k<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-l>', [[:wincmd l<CR>]], { noremap = true, silent = true })
+
+-- Navigate tabs
+vim.api.nvim_set_keymap('n', '<Leader>~',    [[:tabonly<CR>]],     { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>&',    [[:tabclose<CR>]],    { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>*',    [[:tabnew<CR>]],      { noremap = true, silent = true })
+
+-- Navigate buffers
+vim.api.nvim_set_keymap('n', '<Leader>[',  [[:bprevious<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>]', [[:bnext<CR>]],     { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>\\', [[:bdelete<CR>]],   { noremap = true, silent = true })
+
+-- File operations
+vim.api.nvim_set_keymap('n', '<Leader>!', [[:ene<CR>]],        { noremap = true, silent = true }) -- new empty file
+vim.api.nvim_set_keymap('n', '<Leader>@', [[:e %:h<CR>]],      { noremap = true, silent = true }) -- open current file's directory
+vim.api.nvim_set_keymap('n', '<Leader>#', [[:yank %<CR>]],        { noremap = true, silent = true }) -- copy entire file to clipboard
+vim.api.nvim_set_keymap('n', '<Leader>$', [[:saveas ]],        { noremap = true, silent = false }) -- save as (leave filename to be typed)
+vim.api.nvim_set_keymap('n', '<Leader>%', [[:let @+ = expand('%:p')<CR>]], { noremap = true, silent = true }) -- copy current file path to clipboard
+vim.api.nvim_set_keymap('n', '<Leader>^', [[:e #<CR>]],       { noremap = true, silent = true }) -- open last edited file
+
+-- Inspect mapping
+vim.api.nvim_set_keymap('n', '<Leader>?', [[:map ]], { noremap = true, silent = false })
+
+-- Move lines up and down
+vim.api.nvim_set_keymap('n', '<A-j>', [[:m .+1<CR>==]],   { noremap = true, silent = true }) -- move line down
+vim.api.nvim_set_keymap('n', '<A-k>', [[:m .-2<CR>==]],	 { noremap = true, silent = true }) -- move line up
+
+-- Utility mappings
+
 vim.keymap.set('n', 'J', '10j')
 vim.keymap.set('n', 'K', '10k')
 vim.keymap.set('n', 'H', '10h')
@@ -116,56 +182,13 @@ vim.keymap.set('v', ';', ':')
 vim.keymap.set('v', ':', ';')
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
-vim.api.nvim_set_keymap('n', '<Leader>q', [[:q!<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>w', [[:w!<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>W', [[:wq<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>1', [[:wincmd 1w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>2', [[:wincmd 2w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>3', [[:wincmd 3w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>4', [[:wincmd 4w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>5', [[:wincmd 5w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>6', [[:wincmd 6w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>7', [[:wincmd 7w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>8', [[:wincmd 8w<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>9', [[:wincmd 9w<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>bd', [[:set background=dark<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>bl', [[:set background=light<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>co', [[:Telescope colorscheme<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>ff', [[:Telescope find_files<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>fg', [[:Telescope live_grep<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>fb', [[:Telescope buffers<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>t', [[:terminal<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>e', [[:Explore<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>/', [[:let @/ = ""<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>vs', [[:vsplit<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>hs', [[:split<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>zw', [[:set wrap<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>zn', [[:set nowrap<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>lg', [[:LazyGit<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>lf', [[:LazyGitFilter<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>la', [[:Lazy<CR>]], { noremap = true, silent = true })
-
--- nnn file manager
-vim.api.nvim_set_keymap('n', '<Leader>np', [[:NnnPicker<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>nt', [[:NnnExplorer<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>fd', [[:call CocAction('runCommand', 'prettier.forceFormatDocument')<CR>]], { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>y', ':"+y', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>ct', [[:checktime<CR>]], { noremap = true, silent = true })
-
--- Autocmds
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "TelescopeResults",
-  callback = function()
-    vim.opt_local.foldenable = false
-  end,
-})
+-- Direct tab access
+vim.api.nvim_set_keymap('n', '<Leader>1', [[:tabn 1<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>2', [[:tabn 2<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>3', [[:tabn 3<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>4', [[:tabn 4<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>5', [[:tabn 5<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>6', [[:tabn 6<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>7', [[:tabn 7<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>8', [[:tabn 8<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>9', [[:tabn 9<CR>]], { noremap = true, silent = true })
