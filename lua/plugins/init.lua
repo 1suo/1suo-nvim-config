@@ -46,7 +46,7 @@ return {
 	    org_timestamp_up = '<C-a>',
 	    org_timestamp_down = '<C-x>',
 	    org_change_date = '<leader>o.',
-	    org_insert_link = '<leader>ol',
+	    org_insert_link = '<leader>oi',
 	    org_open_at_point = '<leader>og',
 	    org_archive_subtree = '<leader>oz',
 
@@ -105,7 +105,7 @@ return {
 	  end,
 	  {}
 	),
-	vim.api.nvim_set_keymap('n', '<leader>fl', ':OrgLink<CR>', { noremap = true, silent = true }),
+	vim.api.nvim_set_keymap('n', '<leader>ol', ':OrgLink<CR>', { noremap = true, silent = true }),
 
 	org_capture_templates = {
     	  t = {
@@ -173,31 +173,27 @@ return {
 	      }
 	    }
 	  },
-	  -- combined view, but for current project folder, not org_agenda_files
+	  -- combined view, but for current project folder
 	  p = {
 	    description = 'Project view',
 	    types = {
 	      {
 		type = 'tags',
-		match = 'TODO="INBOX"|TODO="TODO"|TODO="PROGRESS"|TODO="WAITING"|TODO="DONE"|TODO="CANCELLED"',
 		org_agenda_overriding_header = 'Project TODO',
-		org_agenda_files = {vim.fn.getcwd() .. '/**/*'},
+		match = 'TODO="INBOX"|TODO="TODO"|TODO="PROGRESS"|TODO="WAITING"|TODO="DONE"|TODO="CANCELLED"',
+		org_agenda_files = {vim.fn.getcwd() .. '/**/*.org'},
 	      },
+	    }
+	  },
+	  -- bookmarks view grouped by tags
+	  b = {
+	    description = 'Bookmarks view',
+	    types = {
 	      {
-		type = 'agenda',
-		org_agenda_overriding_header = 'Week overview',
-		org_agenda_span = 'week',
-		org_agenda_start_on_weekday = 1,
-		org_agenda_files = {vim.fn.getcwd() .. '/**/*'},	
+		type = 'tags',
+		org_agenda_files = {orgfiles_path .. '/bookmarks.org'},
+		org_agenda_overriding_header = 'Bookmarks',
 	      },
-	      types = {
-		{
-		  type = 'tags',
-		  org_agenda_overriding_header = 'Planning',
-		  match = 'PLAN',
-		  org_agenda_files = {vim.fn.getcwd() .. '/**/*'},
-		}
-	      }
 	    }
 	  }
 	},
@@ -218,15 +214,24 @@ return {
       vim.keymap.set("n", "<leader>fh", require("telescope").extensions.orgmode.search_headings)
       vim.keymap.set("n", "<leader>fl", require("telescope").extensions.orgmode.insert_link)
       vim.keymap.set("n", "<leader>ft", require("telescope").extensions.orgmode.search_tags)
+
+      -- custom org_project_picker functions from ../org_project_picker.lua
+      vim.keymap.set('n', '<leader>fo', function()
+	require('org_project_picker').org_todos()
+      end, { desc = 'Org bookmarks with paths' })
+      vim.keymap.set('n', '<leader>fp', function()
+	require('org_project_picker').project_files()
+      end, { desc = 'Project context files' })
+
     end,
   },
-
+ 
   -- nnn file manager
   { 
     'mcchrish/nnn.vim',
       config = function()
-	vim.api.nvim_set_keymap('n', '<Leader>np', [[:NnnPicker<CR>]], { noremap = true, silent = true })
-	vim.api.nvim_set_keymap('n', '<Leader>ne', [[:NnnExplorer<CR>]], { noremap = true, silent = true })
+	vim.api.nvim_set_keymap('n', '<Leader>n', [[:NnnPicker<CR>]], { noremap = true, silent = true })
+	vim.api.nvim_set_keymap('n', '<Leader>N', [[:NnnExplorer<CR>]], { noremap = true, silent = true })
       end,
   },
 
@@ -333,7 +338,7 @@ return {
       vim.api.nvim_set_keymap('n', '<Leader>ff', [[:Telescope find_files<CR>]], { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', '<Leader>fg', [[:Telescope live_grep<CR>]], { noremap = true, silent = true })
       vim.api.nvim_set_keymap('n', '<Leader>fb', [[:Telescope buffers<CR>]], { noremap = true, silent = true })
-      vim.api.nvim_set_keymap('n', '<Leader>fc', [[:Telescope colorscheme<CR>]], { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<Leader>fs', [[:Telescope colorscheme<CR>]], { noremap = true, silent = true })
     end,
   },
 
@@ -345,24 +350,24 @@ return {
       require('hop').setup()
 
       -- normal mode (easymotion-like)
-      vim.api.nvim_set_keymap('n', '<Leader><Leader>b', '<cmd>HopWordBC<CR>', { noremap = true })
-      vim.api.nvim_set_keymap('n', '<Leader><Leader>w', '<cmd>HopWordAC<CR>', { noremap = true })
-      vim.api.nvim_set_keymap('n', '<Leader><Leader>j', '<cmd>HopLineAC<CR>', { noremap = true })
-      vim.api.nvim_set_keymap('n', '<Leader><Leader>k', '<cmd>HopLineBC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('n', '<Leader>g', '<cmd>HopWordAC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('n', '<Leader>G', '<cmd>HopWordBC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('n', '<Leader>j', '<cmd>HopLineAC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('n', '<Leader>k', '<cmd>HopLineBC<CR>', { noremap = true })
 
       -- visual mode (easymotion-like)
-      vim.api.nvim_set_keymap('v', '<Leader><Leader>w', '<cmd>HopWordAC<CR>', { noremap = true })
-      vim.api.nvim_set_keymap('v', '<Leader><Leader>b', '<cmd>HopWordBC<CR>', { noremap = true })
-      vim.api.nvim_set_keymap('v', '<Leader><Leader>j', '<cmd>HopLineAC<CR>', { noremap = true })
-      vim.api.nvim_set_keymap('v', '<Leader><Leader>k', '<cmd>HopLineBC<CR>', { noremap = true })
-
+      vim.api.nvim_set_keymap('v', '<Leader>g', '<cmd>HopWordAC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('v', '<Leader>G', '<cmd>HopWordBC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('v', '<Leader>j', '<cmd>HopLineAC<CR>', { noremap = true })
+      vim.api.nvim_set_keymap('v', '<Leader>k', '<cmd>HopLineBC<CR>', { noremap = true })
+    
       -- normal mode (sneak-like)
-      vim.api.nvim_set_keymap('n', 's', '<cmd>HopChar2AC<CR>', { noremap = false })
-      vim.api.nvim_set_keymap('n', 'S', '<cmd>HopChar2BC<CR>', { noremap = false })
+      vim.api.nvim_set_keymap('n', '<Leader>h', '<cmd>HopChar2AC<CR>', { noremap = false })
+      vim.api.nvim_set_keymap('n', '<Leader>H', '<cmd>HopChar2BC<CR>', { noremap = false })
 
       -- visual mode (sneak-like)
-      vim.api.nvim_set_keymap('v', 's', '<cmd>HopChar2AC<CR>', { noremap = false })
-      vim.api.nvim_set_keymap('v', 'S', '<cmd>HopChar2BC<CR>', { noremap = false })
+      vim.api.nvim_set_keymap('v', '<Leader>h', '<cmd>HopChar2AC<CR>', { noremap = false })
+      vim.api.nvim_set_keymap('v', '<Leader>H', '<cmd>HopChar2BC<CR>', { noremap = false })
     end,
   },
 
@@ -467,6 +472,9 @@ return {
   { 'rose-pine/neovim' },
   { 'catppuccin/nvim' },
   { 'kepano/flexoki-neovim' },
+  { 'EdenEast/nightfox.nvim' },
+  { 'uhs-robert/oasis.nvim' },
+  { 'CantoroMC/nvim-nightmare' },
 
   -- { 'norcalli/nvim-colorizer.lua' },
 

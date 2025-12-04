@@ -95,14 +95,14 @@ require('lazy').setup('plugins', {
 })
 
 -- [[ COLORSCHEME ]]
-vim.cmd.colorscheme 'default'
+-- vim.cmd.colorscheme 'default'
 
 -- [[ KEYMAPPINGS from init.vim & init-inprogress.lua ]]
 -- In <Leader> sequences, system commands are mapped to non-apha symbols to give plugins semantic space in alphabet
 
--- Frequent commands occupy whole letter domains
+-- Frequent commands occupy whole letter domains, write ++p option to force create parent directories if not exist
 vim.api.nvim_set_keymap('n', '<Leader>q', [[:q!<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>w', [[:w!<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>w', [[:w! ++p<CR>]], { noremap = true, silent = true })
 
 -- Lazy.nvim shortcut (only plugin to include here)
 vim.api.nvim_set_keymap('n', '<Leader>:', [[:Lazy<CR>]], { noremap = true, silent = true })
@@ -119,7 +119,7 @@ vim.api.nvim_set_keymap('n', '<Leader>+', [[:set background=light<CR>]], { norem
 vim.api.nvim_set_keymap('n', '<Leader>=', [[:checktime<CR>]], { noremap = true, silent = true })
 
 -- Clear search highlight
-vim.api.nvim_set_keymap('n', '<Leader>/', [[:noh<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader><Leader>', [[:noh<CR>]], { noremap = true, silent = true })
 
 -- Terminal, marks, jumps, registers
 vim.api.nvim_set_keymap('n', '<Leader>~', [[:terminal<CR>]], { noremap = true, silent = true })
@@ -138,9 +138,11 @@ vim.api.nvim_set_keymap('n', '<C-h>', [[:wincmd h<CR>]], { noremap = true, silen
 vim.api.nvim_set_keymap('n', '<C-j>', [[:wincmd j<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-k>', [[:wincmd k<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-l>', [[:wincmd l<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>,', [[:wincmd W<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>.', [[:wincmd w<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>/', [[:wincmd o<CR>]], { noremap = true, silent = true })
 
 -- Navigate tabs
-vim.api.nvim_set_keymap('n', '<Leader>~',    [[:tabonly<CR>]],     { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>&',    [[:tabclose<CR>]],    { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>*',    [[:tabnew<CR>]],      { noremap = true, silent = true })
 
@@ -151,11 +153,15 @@ vim.api.nvim_set_keymap('n', '<Leader>\\', [[:bdelete<CR>]],   { noremap = true,
 
 -- File operations
 vim.api.nvim_set_keymap('n', '<Leader>!', [[:ene<CR>]],        { noremap = true, silent = true }) -- new empty file
-vim.api.nvim_set_keymap('n', '<Leader>@', [[:e %:h<CR>]],      { noremap = true, silent = true }) -- open current file's directory
+vim.api.nvim_set_keymap('n', '<Leader>@', [[:let @+ = expand('%:p')<CR>]], { noremap = true, silent = true }) -- copy current file path to clipboard
 vim.api.nvim_set_keymap('n', '<Leader>#', [[:yank %<CR>]],        { noremap = true, silent = true }) -- copy entire file to clipboard
 vim.api.nvim_set_keymap('n', '<Leader>$', [[:saveas ]],        { noremap = true, silent = false }) -- save as (leave filename to be typed)
-vim.api.nvim_set_keymap('n', '<Leader>%', [[:let @+ = expand('%:p')<CR>]], { noremap = true, silent = true }) -- copy current file path to clipboard
-vim.api.nvim_set_keymap('n', '<Leader>^', [[:e #<CR>]],       { noremap = true, silent = true }) -- open last edited file
+vim.api.nvim_set_keymap('n', '<Leader>%', [[:e %:h<CR>]],      { noremap = true, silent = true }) -- open current file's directory
+vim.api.nvim_set_keymap('n', '<Leader>^', [[:<C-u>execute 'saveas ' . input('New Name: ', expand('%:p:h') . '/') . expand('%:t')<CR>:bdelete #<CR>]], { noremap = true, silent = true })
+
+-- Open configuration files
+vim.api.nvim_set_keymap('n', '<Leader>(', [[:e $MYVIMRC<CR>]],       { noremap = true, silent = true }) -- open init.lua
+vim.api.nvim_set_keymap('n', '<Leader>)', [[:e ~/.config/nvim/lua/plugins/init.lua<CR>]], { noremap = true, silent = true }) -- open plugins.lua	
 
 -- Inspect mapping
 vim.api.nvim_set_keymap('n', '<Leader>?', [[:map ]], { noremap = true, silent = false })
@@ -192,3 +198,4 @@ vim.api.nvim_set_keymap('n', '<Leader>6', [[:tabn 6<CR>]], { noremap = true, sil
 vim.api.nvim_set_keymap('n', '<Leader>7', [[:tabn 7<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>8', [[:tabn 8<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>9', [[:tabn 9<CR>]], { noremap = true, silent = true })
+
